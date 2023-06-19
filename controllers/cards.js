@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable eol-last */
 /* eslint-disable object-curly-newline */
 /* eslint-disable function-paren-newline */
@@ -17,7 +18,7 @@ const createCard = (req, res, next) => {
 
   Card.create({ name, link, userId })
     .then((card) => {
-      res.send(card);
+      res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -85,7 +86,7 @@ const deleteCard = (req, res, next) => {
       if (card.userId.toString() === req.user._id) {
         Card.findByIdAndRemove(cardId).then(() => res.send(card));
       }
-      return res.status(400)
+      return res.status(403)
       .send({ message: 'Возможность удаления своих карточек' });
   })
     .catch((err) => {

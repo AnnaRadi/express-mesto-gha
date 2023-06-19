@@ -24,5 +24,6 @@
   },
   "parserOptions": {
       "ecmaVersion": 2015
-  }
+  },
+  "no-underscore-dangle": ["error", { "allow": ["_id"]}]
 }
