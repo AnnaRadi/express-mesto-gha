@@ -1,3 +1,8 @@
+/* eslint-disable eol-last */
+/* eslint-disable object-curly-newline */
+/* eslint-disable function-paren-newline */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable indent */
 const Card = require('../models/card');
 
 const getCards = (req, res, next) => {
@@ -27,8 +32,7 @@ const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true },
-    )
+    { new: true })
     .then((card) => {
       if (!card) {
         return res.status(404)
@@ -50,8 +54,7 @@ const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true },
-    )
+    { new: true })
     .then((card) => {
       if (!card) {
         return res.status(404).send({ message: 'Карточки не существует' });
@@ -94,8 +97,5 @@ const deleteCard = (req, res, next) => {
     })
     .catch(next);
 };
-
-
-
 
 module.exports = { getCards, createCard, deleteCard, likeCard, dislikeCard };

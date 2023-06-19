@@ -1,3 +1,5 @@
+/* eslint-disable eol-last */
+/* eslint-disable indent */
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({

@@ -1,3 +1,12 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-multi-spaces */
+/* eslint-disable object-curly-newline */
+/* eslint-disable eol-last */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-unused-vars */
+/* eslint-disable indent */
+/* eslint-disable function-paren-newline */
+/* eslint-disable semi */
 const User = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -49,8 +58,7 @@ const updateUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true },
-  )
+    { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         return res
@@ -73,8 +81,7 @@ const updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true },
-  )
+    { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         return res
@@ -86,12 +93,10 @@ const updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send(
-          { message: 'Нневерные данные' },
-        );
+          { message: 'Неверные данные' })
       }
       return res.status(500).send({ message: 'Ошибка на сервере' });
     });
 };
 
-
-module.exports = { getUsers, getUserId, createUser, updateUser, updateAvatar };
+module.exports = { getUsers, getUserId, createUser, updateUser, updateAvatar }

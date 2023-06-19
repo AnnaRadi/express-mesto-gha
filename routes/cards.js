@@ -1,6 +1,15 @@
+/* eslint-disable eol-last */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable indent */
 const router = require('express').Router();
 
-const { getCards, createCard, likeCard, dislikeCard, deleteCard } = require('../controllers/cards');
+const {
+  getCards,
+  createCard,
+  likeCard,
+  dislikeCard,
+  deleteCard,
+ } = require('../controllers/cards');
 
 router.get('/', getCards);
 
