@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable object-curly-spacing */
 /* eslint-disable import/order */
 /* eslint-disable import/no-unresolved */
