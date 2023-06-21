@@ -1,10 +1,7 @@
-/* eslint-disable no-undef */
-/* eslint-disable func-names */
-/* eslint-disable object-shorthand */
-/* eslint-disable no-useless-escape */
-/* eslint-disable eol-last */
-/* eslint-disable indent */
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
+const AuthError = require('../errs/AuthError');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,7 +18,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg',
     validate: {
+      // eslint-disable-next-line object-shorthand, func-names
       validator: function (v) {
+        // eslint-disable-next-line no-useless-escape
         return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/.test(v);
       },
       message: 'Ссылка на аватар не доступна',
@@ -43,6 +42,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {

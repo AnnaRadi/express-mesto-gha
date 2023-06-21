@@ -1,19 +1,6 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable import/order */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-multi-spaces */
-/* eslint-disable object-curly-newline */
-/* eslint-disable eol-last */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-unused-vars */
-/* eslint-disable indent */
-/* eslint-disable function-paren-newline */
-/* eslint-disable semi */
-const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const NotFoundError = require('../errs/NotFoundError');
 const BadRequestError = require('../errs/BadRequestError');
 const ConflictError = require('../errs/ConflictError');
@@ -26,7 +13,7 @@ const getUsers = (req, res) => {
 };
 
 const getUserId = (req, res, next) => {
-  const id  = req.params.id;
+  const { id } = req.params;
 
   return User.findById(id)
     .then((user) => {
@@ -38,19 +25,26 @@ const getUserId = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Не найден пользователь'));
+      } else {
+        next(err);
       }
-      res.status(500).send({ message: 'Ошибка на сервере' });
     });
-}
+};
 
 const createUser = (req, res, next) => {
-  const {name, about, avatar, email,  password} = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
 
   User.findOne({ email })
-    .then((user) => {
+    .then(() => {
       throw new ConflictError('Пользователь уже создан');
-    })
-    bcrypt.hash(password, 10)
+    });
+  bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name,
       about,
@@ -64,11 +58,10 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверно'));
+      } else {
+        next(err);
       }
-      res.status(500)
-      .send({ message: 'Ошибка' });
-    })
-    .catch(next);
+    });
 };
 
 const updateUser = (req, res, next) => {
@@ -76,7 +69,8 @@ const updateUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true })
+    { new: true, runValidators: true },
+  )
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
@@ -86,18 +80,19 @@ const updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверные данные'));
+      } else {
+        next(err);
       }
-      return res.status(500).send({ message: 'Ошибка на сервере' });
-    })
-    .catch(next);
-}
+    });
+};
 
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true })
+    { new: true, runValidators: true },
+  )
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
@@ -107,10 +102,12 @@ const updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверные данные'));
+      } else {
+        next(err);
       }
-      return res.status(500).send({ message: 'Ошибка на сервере' });
     });
 };
+
 const getCurrentUser = (req, res, next) => {
   User.findOne({ _id: req.user._id })
     .then((user) => {
@@ -144,4 +141,12 @@ const login = (req, res, next) => {
     });
 };
 
-module.exports = { getUsers, getUserId, createUser, updateUser, updateAvatar, getCurrentUser, login}
+module.exports = {
+  getUsers,
+  getUserId,
+  createUser,
+  updateUser,
+  updateAvatar,
+  getCurrentUser,
+  login,
+};

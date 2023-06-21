@@ -1,9 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable eol-last */
-/* eslint-disable object-curly-newline */
-/* eslint-disable function-paren-newline */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable indent */
 const Card = require('../models/card');
 const NotFoundError = require('../errs/NotFoundError');
 const BadRequestError = require('../errs/BadRequestError');
@@ -26,17 +20,18 @@ const createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Неверные данные'));
+      } else {
+        next(err);
       }
-      return err;
-    })
-    .catch(next);
+    });
 };
 
 const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true })
+    { new: true },
+  )
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Такой карточки нет');
@@ -46,17 +41,18 @@ const likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Неверный id'));
+      } else {
+        next(err);
       }
-      return res.status(500).send({ message: 'Ошибка на сервере' });
-    })
-    .catch(next);
+    });
 };
 
 const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true })
+    { new: true },
+  )
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточки не существует');
@@ -66,10 +62,10 @@ const dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Неверный id'));
+      } else {
+        next(err);
       }
-      return res.status(500).send({ message: 'Ошибка на сервере' });
-    })
-    .catch(next);
+    });
 };
 
 const deleteCard = (req, res, next) => {
@@ -86,14 +82,20 @@ const deleteCard = (req, res, next) => {
         Card.findByIdAndRemove(cardId).then(() => res.send(card));
       }
       throw new ForbiddenError('Возможность удаления своих карточек');
-  })
-    .catch((err) => {
-    if (err.name === 'CastError') {
-      next(new BadRequestError('Неверный id'));
-    }
-      return res.status(500).send({ message: 'Ошибка на сервере' });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Неверный id'));
+      } else {
+        next(err);
+      }
+    });
 };
 
-module.exports = { getCards, createCard, deleteCard, likeCard, dislikeCard };
+module.exports = {
+  getCards,
+  createCard,
+  deleteCard,
+  likeCard,
+  dislikeCard,
+};

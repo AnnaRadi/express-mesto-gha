@@ -1,8 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable import/extensions */
-/* eslint-disable eol-last */
-// eslint-disable-next-line import/no-unresolved
 const NotFoundError = require('./NotFoundError');
 
 module.exports = (req, res, next) => {

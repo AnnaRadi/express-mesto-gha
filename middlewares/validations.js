@@ -1,8 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable eol-last */
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
 const { celebrate, Joi } = require('celebrate');
 
 const validationLogin = celebrate({

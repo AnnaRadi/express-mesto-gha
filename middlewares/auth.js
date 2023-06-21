@@ -1,14 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable linebreak-style */
-/* eslint-disable consistent-return */
-/* eslint-disable eol-last */
-/* eslint-disable linebreak-style */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
 const jwt = require('jsonwebtoken');
 const AuthError = require('../errs/AuthError');
 
+// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 

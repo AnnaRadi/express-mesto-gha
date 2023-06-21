@@ -1,12 +1,5 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/order */
-/* eslint-disable no-console */
-/* eslint-disable indent */
-/* eslint-disable no-tabs */
 const express = require('express');
 const mongoose = require('mongoose');
-const routes = require('./routes/index');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -16,7 +9,7 @@ const { validationLogin, validationCreateUser } = require('./middlewares/validat
 const auth = require('./middlewares/auth');
 const extractJwt = require('./middlewares/extractJwt');
 const handleError = require('./middlewares/handleError');
-const NotFoundDocumentError = require('./errs/NotFoundDocumentError');
+const routes = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -34,11 +27,10 @@ app.use(routes);
 
 mongoose.connect('mongodb://0.0.0.0/mestodb', { useNewUrlParser: true });
 
-app.use('*', NotFoundDocumentError);
-
 app.use(errors());
 app.use(handleError);
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Сервер запущен ${PORT}`);
 });
