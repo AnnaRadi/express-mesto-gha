@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
+/* eslint-disable import/newline-after-import */
 /* eslint-disable eol-last */
 /* eslint-disable indent */
 const router = require('express').Router();
-
 const userRoutes = require('./users');
 const cardRoutes = require('./cards');
 

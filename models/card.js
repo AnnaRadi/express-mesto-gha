@@ -1,6 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable eol-last */
 /* eslint-disable indent */
 const mongoose = require('mongoose');
+
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {

@@ -5,6 +5,9 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable indent */
 const Card = require('../models/card');
+const NotFoundError = require('../errs/NotFoundError');
+const BadRequestError = require('../errs/BadRequestError');
+const ForbiddenError = require('../errs/ForbiddenError');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -22,7 +25,7 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Неверные данные' });
+        next(new BadRequestError('Неверные данные'));
       }
       return err;
     })
@@ -36,15 +39,13 @@ const likeCard = (req, res, next) => {
     { new: true })
     .then((card) => {
       if (!card) {
-        return res.status(404)
-        .send({ message: 'Такой карточки нет' });
+        throw new NotFoundError('Такой карточки нет');
       }
       return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400)
-          .send({ message: 'Неверный id' });
+        next(new BadRequestError('Неверный id'));
       }
       return res.status(500).send({ message: 'Ошибка на сервере' });
     })
@@ -58,14 +59,13 @@ const dislikeCard = (req, res, next) => {
     { new: true })
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: 'Карточки не существует' });
+        throw new NotFoundError('Карточки не существует');
       }
       return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400)
-          .send({ message: 'Неверный id' });
+        next(new BadRequestError('Неверный id'));
       }
       return res.status(500).send({ message: 'Ошибка на сервере' });
     })
@@ -77,8 +77,7 @@ const deleteCard = (req, res, next) => {
   return Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404)
-          .send({ message: 'Карточки не существует' });
+        throw new NotFoundError('Карточки не существует');
       }
       return res.send(card);
     })
@@ -86,13 +85,11 @@ const deleteCard = (req, res, next) => {
       if (card.userId.toString() === req.user._id) {
         Card.findByIdAndRemove(cardId).then(() => res.send(card));
       }
-      return res.status(403)
-      .send({ message: 'Возможность удаления своих карточек' });
+      throw new ForbiddenError('Возможность удаления своих карточек');
   })
     .catch((err) => {
     if (err.name === 'CastError') {
-      return res.status(400)
-        .send({ message: 'Неверный id' });
+      next(new BadRequestError('Неверный id'));
     }
       return res.status(500).send({ message: 'Ошибка на сервере' });
     })
