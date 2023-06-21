@@ -20,3 +20,6 @@ node.js,
 express,
 mongo.db,
 mongoose,
+
+## Ссылка на GitHub Pages
+https://github.com/AnnaRadi/express-mesto-gha
