@@ -131,6 +131,7 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
       res.cookie('jwt', token, {
+        maxAge: '7d',
         httpOnly: true,
         sameSite: true,
       })
