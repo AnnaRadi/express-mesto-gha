@@ -70,20 +70,14 @@ const dislikeCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  return Card.findById(cardId)
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточки не существует');
       } else if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Удаление невозможно');
       }
-      return Card.findByIdAndRemove(cardId);
-    })
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточки не существует');
-      }
-      res.send(card);
+      return card.deleteOne().then(() => res.send({ message: 'Карточка удалена' }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
