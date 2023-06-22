@@ -41,28 +41,29 @@ const createUser = (req, res, next) => {
   } = req.body;
 
   User.findOne({ email })
-    .then(() => {
-      throw new ConflictError('Пользователь уже создан');
-    });
-  bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hash,
-    }))
-    .then((us) => {
-      res.send(formatUser(us));
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Неверно'));
-      } else {
-        next(err);
+    .then((user) => {
+      if (user) {
+        throw new ConflictError('Пользователь уже создан');
       }
-    })
-    .catch(next);
+      bcrypt.hash(password, 10)
+        .then((hash) => User.create({
+          name,
+          about,
+          avatar,
+          email,
+          password: hash,
+        }))
+        .then((us) => {
+          res.send(formatUser(us));
+        })
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            next(new BadRequestError('Неверно'));
+          } else {
+            next(err);
+          }
+        });
+    }).catch(next);
 };
 
 const updateUser = (req, res, next) => {
