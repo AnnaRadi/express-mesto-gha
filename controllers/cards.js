@@ -74,14 +74,16 @@ const deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточки не существует');
+      } else if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError('Удаление невозможно');
       }
-      return res.send(card);
+      return Card.findByIdAndRemove(cardId);
     })
     .then((card) => {
-      if (card.userId.toString() === req.user._id) {
-        Card.findByIdAndRemove(cardId).then(() => res.send(card));
+      if (!card) {
+        throw new NotFoundError('Карточки не существует');
       }
-      throw new ForbiddenError('Возможность удаления своих карточек');
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
