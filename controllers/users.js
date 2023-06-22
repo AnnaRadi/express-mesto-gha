@@ -17,13 +17,13 @@ const getUser = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError('Не найдено');
       }
       return res.send(formatUser(user));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Предоставлены некорректные данные'));
+        next(new BadRequestError('Некорректные данные'));
       } else {
         next(err);
       }
