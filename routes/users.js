@@ -1,7 +1,8 @@
 const router = require('express').Router();
+
 const {
   getUsers,
-  getUserId,
+  getUser,
   updateUser,
   updateAvatar,
   getCurrentUser,
@@ -11,9 +12,12 @@ const { validationUserId, validationUpdateUser, validationUpdateAvatar } = requi
 
 router.get('/', getUsers);
 
-router.get('/:userId', validationUserId, getUserId);
 router.get('/me', getCurrentUser);
+
+router.get('/:userId', validationUserId, getUser);
+
 router.patch('/me', validationUpdateUser, updateUser);
+
 router.patch('/me/avatar', validationUpdateAvatar, updateAvatar);
 
 module.exports = router;

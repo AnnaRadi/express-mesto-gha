@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { formatUser } = require('../utils/formatUser');
 const NotFoundError = require('../errs/NotFoundError');
 const BadRequestError = require('../errs/BadRequestError');
 const ConflictError = require('../errs/ConflictError');
-const { formatUser } = require('../utils/formatUser');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -12,7 +12,7 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-const getUserId = (req, res, next) => {
+const getUser = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
     .then((user) => {
@@ -23,7 +23,7 @@ const getUserId = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Не найден пользователь'));
+        next(new BadRequestError('Предоставлены некорректные данные'));
       } else {
         next(err);
       }
@@ -145,7 +145,7 @@ const login = (req, res, next) => {
 
 module.exports = {
   getUsers,
-  getUserId,
+  getUser,
   createUser,
   updateUser,
   updateAvatar,
