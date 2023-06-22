@@ -61,7 +61,8 @@ const createUser = (req, res, next) => {
       } else {
         next(err);
       }
-    });
+    })
+    .catch(next);
 };
 
 const updateUser = (req, res, next) => {
@@ -131,7 +132,7 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
       res.cookie('jwt', token, {
-        maxAge: '7d',
+        maxAge: 24 * 7 * 60 * 60,
         httpOnly: true,
         sameSite: true,
       })
