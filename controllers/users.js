@@ -6,16 +6,15 @@ const BadRequestError = require('../errs/BadRequestError');
 const ConflictError = require('../errs/ConflictError');
 const { formatUser } = require('../utils/formatUser');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((error) => res.status(500).send({ message: error }));
+    .catch(next);
 };
 
 const getUserId = (req, res, next) => {
-  const { id } = req.params;
-
-  User.findById(id)
+  const { userId } = req.params;
+  User.findById(userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
